@@ -1,0 +1,24 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+df = pd.read_csv('bmi.csv')
+df.head()
+missing_percentage = (df.isnull().sum() / len(df)) * 100
+print(missing_percentage)
+df.describe()
+df.shape
+df['BmiClass'].replace({'Underweight': 0, 'Normal Weight': 1, 'Overweight': 2, 'Obese Class 1': 3, 'Obese Class 2': 4, 'Obese Class 3': 5}, inplace=True)
+df.head()
+X = df.drop('BmiClass', axis='columns')
+y = df['BmiClass']
+from sklearn.model_selection import train_test_split
+X = df.drop('BmiClass', axis=1)
+y = df['BmiClass']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
+from sklearn.ensemble import RandomForestClassifier
+clf = RandomForestClassifier(n_estimators=5, random_state=42)
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+from sklearn.metrics import accuracy_score
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy:.2f}")
